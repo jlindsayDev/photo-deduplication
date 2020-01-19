@@ -1,0 +1,3 @@
+[submodule "photosmeta"]
+	path = photosmeta
+	url = git@github.com:RhetTbull/photosmeta.git
