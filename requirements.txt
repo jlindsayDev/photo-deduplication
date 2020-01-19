@@ -1,0 +1,2 @@
+osxphotos>=0.22.0
+imagededup>=0.2.2
