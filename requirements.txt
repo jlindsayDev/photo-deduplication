@@ -1,2 +1,6 @@
-osxphotos>=0.22.0
-imagededup>=0.2.2
+osxphotos >= 0.22.0
+photosmeta >= 1.3.4
+imagededup >= 0.2.2
+sqlalchemy >= 1.3.12
+flask >= 1.1.1
+pyheif >= 0.3.3
