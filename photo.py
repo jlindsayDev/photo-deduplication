@@ -16,7 +16,7 @@ class Photo:
       'date': self.photo.date,
       'hashes': self.hashes,
     })
-  
+
   def __str__(self):
     return self.__repr__()
     # print(

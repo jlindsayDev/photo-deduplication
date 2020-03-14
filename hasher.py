@@ -33,3 +33,9 @@ class Hasher:
     outfile = 'json/' + hasher_name + '.json'
     duplicates = hasher.find_duplicates(encoding_map=encoding_map, scores=True, outfile=outfile)
     return duplicates
+
+  @classmethod
+  def find_duplicates_to_remove(cls, hasher_name, hasher, photos):
+    encoding_map = { photo.path: photo.hashes[hasher_name] for photo in photos }
+    duplicates = hasher.find_duplicates_to_remove(encoding_map=encoding_map, scores=True)
+    return duplicates

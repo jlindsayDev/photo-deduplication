@@ -16,20 +16,20 @@ def main():
   default_path = PHOTO_LIBRARY
   path = sys.argv[1] if len(sys.argv) > 1 else default_path
   photo_library_path = os.path.expanduser(path)
-  
-  photosdb = osxphotos.PhotosDB(photo_library_path)
-  photos = [ Photo(p) for p in filter(is_image_supported, photosdb.photos()) ]
 
+  photos = collect_photos(photo_library_path)
+  duplicates = hash_photos(photos)
+
+def collect_photos(library_path):
+  photosdb = osxphotos.PhotosDB(library_path)
+  photos = [ Photo(p) for p in filter(is_image_supported, photosdb.photos()) ]
+  return photos
+
+def hash_photos(photos):
   hasher = Hasher()
   encodings = hasher.encode_images(photos)
   duplicates = hasher.find_duplicates(photos)
-
-  serve_duplicates(duplicates)
-
-  print(duplicates)
-
-def serve_duplicates(dupes):
-  pass
+  return duplicates
 
 def is_image_supported(photo):
     file_extension = os.path.splitext(photo.path)[1]
