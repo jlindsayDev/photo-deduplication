@@ -1,10 +1,14 @@
+import os
+from functools import reduce
+
 from imagededup.methods import PHash, AHash, DHash, WHash
 import osxmetadata
-from functools import reduce
 
 class Hasher:
   HASHER_LIST = [PHash, AHash, DHash, WHash]
   HASHERS = { h.__name__.lower(): h() for h in HASHER_LIST }
+
+  JSON_DIR = "/Users/josh/Repos/photo-dedupe/json/"
 
   @classmethod
   def encode_images(cls, photos):
@@ -28,9 +32,9 @@ class Hasher:
     return hasher.encode_image(image_file=photo.path)
 
   @classmethod
-  def find_duplicates_with_hasher(cls, hasher_name, hasher, photos):
+  def find_duplicates_with_hasher(cls, hasher_name, hasher, photos, **kwargs):
     encoding_map = { photo.path: photo.hashes[hasher_name] for photo in photos }
-    outfile = 'json/' + hasher_name + '.json'
+    outfile = os.path.join(cls.JSON_DIR, hasher_name + '.json')
     duplicates = hasher.find_duplicates(encoding_map=encoding_map, scores=True, outfile=outfile)
     return duplicates
 

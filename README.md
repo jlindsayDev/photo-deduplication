@@ -4,14 +4,15 @@
 
 Deduplicate photos in photo library using [imagededup](https://idealo.github.io/imagededup/) hashing algorithms (PHash, AHash, WHash, DHash) and EXIF data
 
-- [ ] Scan photo directory, Apple .photoslibrary or photos.db
-- [ ] Create hashes of each photo
-  - [ ] JPEG, PNG, BMP, GIF formats
+- [x] Scan photo directory, Apple .photoslibrary or photos.db with [osxphotos](https://github.com/RhetTbull/osxphotos)
+- [x] Create hashes of each photo
+  - [x] JPEG, PNG, BMP, GIF formats
   - [ ] HEIC, HEIF formats (will try [pyheif](https://github.com/david-poirier-csn/pyheif))
   - [ ] Google/Android Photos with Motion
   - [ ] Burst Photos
   - [ ] Apple Live Photos
   - [ ] Video
+- [x] Log results to JSON
 - [ ] Persist photo hashing scores in SQLite db
 - [ ] Partition and group photos based on hashing scores
 - [ ] Create new Apple .photolibrary

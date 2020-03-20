@@ -1,9 +1,13 @@
 import pyheif
 
+# import apps.metadata.photosmeta
+
 class Photo:
   def __init__(self, photo):
     self.photo = photo
     self.path = photo.path
+    self.exif = {}
+    self.type = ""
     self.hashes = {}
 
   def __json__(self):
