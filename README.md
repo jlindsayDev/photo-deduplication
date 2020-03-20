@@ -4,7 +4,7 @@
 
 Deduplicate photos in photo library using [imagededup](https://idealo.github.io/imagededup/) hashing algorithms (PHash, AHash, WHash, DHash) and EXIF data
 
-- [ ] Scan photo directory/library
+- [ ] Scan photo directory, Apple .photoslibrary or photos.db
 - [ ] Create hashes of each photo
   - [ ] JPEG, PNG, BMP, GIF formats
   - [ ] HEIC, HEIF formats (will try [pyheif](https://github.com/david-poirier-csn/pyheif))
@@ -13,9 +13,8 @@ Deduplicate photos in photo library using [imagededup](https://idealo.github.io/
   - [ ] Apple Live Photos
   - [ ] Video
 - [ ] Persist photo hashing scores in SQLite db
-- [ ] Group photos based on hashing scores
-- [ ] Delete duplicates based on hashing values
-  - [ ] Allow selection of photos from group
+- [ ] Partition and group photos based on hashing scores
+- [ ] Create new Apple .photolibrary
 
 ## Photo Manager
 
@@ -28,6 +27,7 @@ Manage photo edits and duplicates in simple UI
   - [ ] React or React Native? (Android app)
 - [ ] Create photos from Live Photo snapshots
 - [ ] Display graph of Photo edits
+- [ ] Organize photos into albums
 
 ## Photo Uploader
 
@@ -43,6 +43,7 @@ Reduce iCloud storage usage by replacing iCloud originals with compressed Google
   - [ ] iCloud
   - [ ] Google Photos
   - [ ] Amazon Photos
+- [ ] Upsert to photo albums on remote services
 
 ### API Reference Docs
 
