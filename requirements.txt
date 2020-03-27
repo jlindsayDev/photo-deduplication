@@ -3,4 +3,5 @@ photosmeta >= 1.3.4
 imagededup >= 0.2.2
 sqlalchemy >= 1.3.12
 flask >= 1.1.1
-pyheif >= 0.3.3
+pyheif >= 1.3.3
+flask-sqlalchemy >= 2.4.1
