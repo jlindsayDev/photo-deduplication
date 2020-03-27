@@ -13,7 +13,7 @@ Deduplicate photos in photo library using [imagededup](https://idealo.github.io/
   - [ ] Apple Live Photos
   - [ ] Video
 - [x] Log results to JSON
-- [ ] Persist photo hashing scores in SQLite db
+- [x] Persist photo hashing scores in SQLite db
 - [ ] Partition and group photos based on hashing scores
 - [ ] Create new Apple .photolibrary
 
@@ -21,7 +21,7 @@ Deduplicate photos in photo library using [imagededup](https://idealo.github.io/
 
 Manage photo edits and duplicates in simple UI
 
-- [ ] Simple flask server
+- [x] Simple flask server
 - [ ] WebExtensions browser addon
   - [ ] Firefox
   - [ ] Chrome
@@ -34,10 +34,10 @@ Manage photo edits and duplicates in simple UI
 
 Reduce iCloud storage usage by replacing iCloud originals with compressed Google Photos copies. Store originals in Amazon Photos (unlimited storage with Amazon Prime).
 
-- [ ] Download photos in batches (with rate limiting options)
+- [ ] Download photos in batches (with rate limiting)
   - [ ] Amazon
   - [ ] Google
-- [ ] Upload photos in batches (with throttling options)
+- [ ] Upload photos in batches (with throttling)
   - [ ] Amazon
   - [ ] Google
 - [ ] Test photo data fidelity (upload original to service, download from service, compare to original)
