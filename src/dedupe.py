@@ -19,8 +19,7 @@ def parse_args():
   parser = ArgumentParser(description='Deduplicate photo album')
 
   parser.add_argument('-l', '--library_path',
-    required=True,
-    type=check_existence("Photo library"),
+    type=check_path_existence("Photo library"),
     action='store',
     default=osxphotos.utils.get_last_library_path(),
     help='photo library path')
@@ -38,7 +37,7 @@ def parse_args():
   return parser.parse_args()
 
 
-def check_existence(arg_name):
+def check_path_existence(arg_name):
   def check_name(path):
     abspath = os.path.abspath(os.path.expanduser(path))
     if not os.path.exists(abspath):
@@ -86,7 +85,7 @@ def persist_photos(photos, db):
 
   new_photos = [ p for p in photos if p.uuid not in db_photos ]
   if new_photos:
-    logging.info(f"Inserting {len(new_photos)} new photos")
+    logging.info(f"INSERTING {len(new_photos)} NEW PHOTOS")
     db.add_all(new_photos)
     db.commit()
 
@@ -95,13 +94,36 @@ def persist_duplicates(library, duplicates, encodings, db):
   logging.info("Persisting duplicates")
 
   # get fresh photo data from the database
-  photos = db.query(Photo).filter(Photo.library_id == library.id).all()
-  keyed_photos = { p.path: p for p in photos }
+  photos = db.query(Photo).filter_by(library_id=library.id).all()
+  dupes = db.query(Duplicate).filter_by(library_id=library.id).all()
+
+  id_photos = { p.id: p for p in photos }
+  keyed_photos = { p.abspath(): p for p in photos }
+
+  org = {}
+  for d in dupes:
+    temp = org[d.hash_name] if d.hash_name in org else {}
+    org[d.hash_name] = temp
+
+    op = id_photos[d.orig_photo_id]
+    op_path = op.abspath()
+    dp = id_photos[d.dup_photo_id]
+
+    temp = org[d.hash_name][op_path] if op_path in org[d.hash_name].keys() else set()
+    org[d.hash_name][op_path] = temp
+
+    org[d.hash_name][op_path].add(dp.abspath())
+
   db_duplicates = []
 
   for hash_name, photos in duplicates.items():
     for orig_photo_path, photo_duplicates in photos.items():
+      existingpaths = org[hash_name][orig_photo_path] if org and org[hash_name] and orig_photo_path in org[hash_name] else set()
+
       for dup_photo_path, score in photo_duplicates:
+        if dup_photo_path in existingpaths:
+          continue
+
         dupe = Duplicate(
           library_id=library.id,
           orig_photo_id=keyed_photos[orig_photo_path].id,
@@ -112,9 +134,10 @@ def persist_duplicates(library, duplicates, encodings, db):
         )
         db_duplicates.append(dupe)
 
-  logging.info(f"Inserting {len(db_duplicates)} DUPLICATES")
-  db.add_all(db_duplicates)
-  db.commit()
+  if db_duplicates:
+    logging.info(f"INSERTING {len(db_duplicates)} NEW DUPLICATES")
+    db.add_all(db_duplicates)
+    db.commit()
 
 
 def main():
