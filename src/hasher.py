@@ -35,10 +35,10 @@ class Hasher:
 
   def __calculate_hash(self, hasher, photo):
     # TODO take into account photo edits/modifications/live
-    return hasher.encode_image(image_file=photo.path)
+    return hasher.encode_image(image_file=photo.abspath())
 
 
   def __find_duplicates_with_hasher(self, hasher_name, hasher, photos):
-    encoding_map = { photo.path: photo.hashes[hasher_name] for photo in photos }
+    encoding_map = { photo.abspath(): photo.hashes[hasher_name] for photo in photos }
     duplicates = hasher.find_duplicates(encoding_map=encoding_map, scores=True)
     return duplicates
