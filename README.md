@@ -17,6 +17,14 @@ Deduplicate photos in photo library using [imagededup](https://idealo.github.io/
 - [ ] Partition and group photos based on hashing scores
 - [ ] Create new Apple .photolibrary
 
+### References
+
+- [idealo/imagededup](https://github.com/idealo/imagededup)
+- [RhetTbull/osxmetadata](https://github.com/RhetTbull/osxmetadata)
+- [JohannesBuchner/imagehash](https://github.com/JohannesBuchner/imagehash)
+- [devedge/imagehash](https://github.com/devedge/imagehash)
+- [david-poirier-csn/pyheif](https://github.com/david-poirier-csn/pyheif)
+
 ## Photo Manager
 
 Manage photo edits and duplicates in simple UI
