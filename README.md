@@ -1,6 +1,6 @@
-# Photo Library Dedupe
+# Photo Library Deduplication
 
-## Photo Deduplication
+## Image Hashing
 
 Deduplicate photos in photo library using [imagededup](https://idealo.github.io/imagededup/) hashing algorithms (PHash, AHash, WHash, DHash), EXIF data, and [metadata](https://github.com/RhetTbull/osxmetadata)
 
