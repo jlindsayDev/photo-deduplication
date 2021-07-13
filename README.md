@@ -8,6 +8,7 @@ Deduplicate photos in photo library using [imagededup](https://idealo.github.io/
 - [x] Create hashes of each photo
   - [x] JPEG, PNG, BMP, GIF formats
   - [ ] HEIC, HEIF formats (will try [pyheif](https://github.com/david-poirier-csn/pyheif))
+  - [ ] Leverage [ImageMagick's identification signature](https://imagemagick.org/script/identify.php)
   - [ ] Google/Android Photos with Motion
   - [ ] Burst Photos
   - [ ] Apple Live Photos
