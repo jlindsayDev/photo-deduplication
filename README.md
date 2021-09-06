@@ -1,8 +1,16 @@
 # Photo Library Deduplication
 
-## Image Hashing
+This is a blanket repository for my attempt at deduplicating photos in an iCloud Photos Library.
 
-Deduplicate photos in photo library using [imagededup](https://idealo.github.io/imagededup/) hashing algorithms (PHash, AHash, WHash, DHash), EXIF data, and [metadata](https://github.com/RhetTbull/osxmetadata)
+## Image Fingerprinting
+
+Create an array of distinct photo fingerprints leveraging [imagededup](https://idealo.github.io/imagededup/) hashing algorithms (PHash, AHash, WHash, DHash), EXIF data, and [metadata](https://github.com/RhetTbull/osxmetadata)
+
+### Current Dev Status
+
+I off-and-on work on this as a pet-project. Thinking about a live-blog [changelog](changelog.md) for my own reference whenever making any changes.
+
+### Goals
 
 - [x] Scan photo directory, Apple .photoslibrary or photos.db with [osxphotos](https://github.com/RhetTbull/osxphotos)
 - [x] Create hashes of each photo
@@ -35,6 +43,7 @@ Manage photo edits and duplicates in simple UI
   - [ ] Firefox
   - [ ] Chrome
   - [ ] React or React Native? (Android app)
+- [ ] [Tauri](https://github.com/tauri-apps/tauri)/Electron "app" (???)
 - [ ] Create photos from Live Photo snapshots
 - [ ] Display graph of Photo edits
 - [ ] Organize photos into albums
@@ -59,3 +68,4 @@ Reduce iCloud storage usage by replacing iCloud originals with compressed Google
 
 - [Google Photos](https://developers.google.com/photos/library/reference/rest)
 - [Amazon Photos](https://developer.amazon.com/docs/amazon-drive/ad-restful-api-nodes.html)
+  > Important: Amazon Drive has been deprecated! No apps using Amazon Drive can be submitted to the Appstore.
