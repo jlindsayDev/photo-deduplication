@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "phototest"
+version = "0.1.0"
+description = ""
+authors = []
+
+[tool.poetry.dependencies]
+python = "^3.9"
+ImageHash = "^4.2.1"
+imagededup = {git = "https://github.com/j000shDotCom/imagededup.git", rev = "josh/update-deps"}
+osxphotos = "^0.42.80"
+pyheif = "^0.5.1"
+SQLAlchemy = "^1.4.23"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

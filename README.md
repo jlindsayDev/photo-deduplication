@@ -8,7 +8,19 @@ Create an array of distinct photo fingerprints leveraging [imagededup](https://i
 
 ### Current Dev Status
 
-I off-and-on work on this as a pet-project. Thinking about a live-blog [changelog](CHANGELOG.md) for my own reference whenever making any changes.
+This my hobby pet-project I work on occasionally.
+
+Started a live-blog [changelog](CHANGELOG.md) for my own reference whenever making any changes.
+
+### Setup
+
+```shell
+poetry install
+```
+
+### Usage
+
+TODO(@j000shDotCom)
 
 ### Goals
 
