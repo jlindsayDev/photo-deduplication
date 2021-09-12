@@ -16,11 +16,30 @@ Started a live-blog [changelog](CHANGELOG.md) for my own reference whenever maki
 
 ```shell
 poetry install
+poetry run python src/dedupe.py [library_paths]
+```
+
+Example
+```
+poetry run python src/dedupe.py library.photoslibrary ~/Pictures /Volumes/ExternalSSD/Photos
 ```
 
 ### Usage
 
-TODO(@j000shDotCom)
+```shell
+usage: dedupe.py [-h] [-d DB_PATH] [-v] path [path ...]
+
+Deduplicate photo albums
+
+positional arguments:
+  path                  path to .photoslibrary or photo directory
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DB_PATH, --db_path DB_PATH
+                        database file path where results persist
+  -v, --verbose         verbose logging
+```
 
 ### Goals
 

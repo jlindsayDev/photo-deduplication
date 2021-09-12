@@ -1,4 +1,3 @@
-import sys
 import os
 import logging
 from argparse import ArgumentParser
@@ -10,25 +9,28 @@ from hasher import Hasher
 from db import Library, Photo, Duplicate, fetch_or_initialize_db
 
 
+DATABASE_DEFAULT_PATH = "assets/duplicates.db"
+
 SUPPORTED_IMAGE_FORMATS = set(
   ['JPEG', 'PNG', 'BMP', 'MPO', 'PPM', 'TIFF', 'GIF', 'SVG', 'PGM', 'PBM']
 )
 
 
 def parse_args():
-  parser = ArgumentParser(description='Deduplicate photo album')
-
-  parser.add_argument('-l', '--library_path',
-    type=check_path_existence("Photo library"),
-    action='store',
-    default=osxphotos.utils.get_last_library_path(),
-    help='photo library path')
+  parser = ArgumentParser(description='Deduplicate photo albums')
 
   parser.add_argument('-d', '--db_path',
-    type=str,
+    type=str,#check_path_existence("database file"),
     action='store',
-    default="assets/duplicates.db",
-    help="database file name")
+    default=DATABASE_DEFAULT_PATH,
+    help=f"database file path where results persist (defaults to {DATABASE_DEFAULT_PATH})")
+
+  parser.add_argument('paths',
+    metavar='path',
+    type=check_path_existence('photo library path'),
+    nargs='*',
+    action='extend',
+    help="path to .photoslibrary or photo directory")
 
   parser.add_argument('-v', '--verbose',
     action='store_true',
@@ -45,6 +47,11 @@ def check_path_existence(arg_name):
       exit(55)
     return abspath
   return check_name
+
+
+def fetch_libraries(paths, db):
+  # TODO @j000shDotCom separate directories from apple photos
+  return [fetch_library(path, db) for path in paths], []
 
 
 def fetch_library(library_path, db):
@@ -142,9 +149,23 @@ def persist_duplicates(library, duplicates, encodings, db):
 
 def main():
   args = parse_args()
+
+  library_paths = args.paths
+  if not library_paths:
+    logging.error('no libraries specified')
+    last_library_path = osxphotos.utils.get_last_library_path()
+    system_library_path = osxphotos.utils.get_system_library_path()
+
+    resp = input(f"use last .photoslibrary ({last_library_path}) [Y/n] ")
+    if not resp or resp.lower() == 'y':
+      library_paths.append(last_library_path)
+    else:
+      exit(2)
+
   db_session = fetch_or_initialize_db(args.db_path)
-  library = fetch_library(args.library_path, db_session)
-  photos, videos, albums = fetch_photos(library)
+
+  applephotos, directories = fetch_libraries(library_paths, db_session)
+  photos, videos, albums = fetch_photos(applephotos[0]) # TODO
 
   hasher = Hasher()
   logging.info("Encoding images")
@@ -154,7 +175,7 @@ def main():
   duplicates = hasher.find_duplicates(photos)
 
   persist_photos(photos, db_session)
-  persist_duplicates(library, duplicates, encodings, db_session)
+  # persist_duplicates(library, duplicates, encodings, db_session)
 
 
 if __name__ == "__main__":
