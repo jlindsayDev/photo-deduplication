@@ -12,9 +12,11 @@ from sqlalchemy.dialects import sqlite
 Base = declarative_base()
 BigIntegerType = BigInteger().with_variant(sqlite.INTEGER(), 'sqlite')
 
+
 class LibraryType(enum.Enum):
   directory = 1
   apple_photos = 2
+
 
 class Library(Base):
   __tablename__ = 'library'
@@ -22,9 +24,7 @@ class Library(Base):
   id = Column(Integer, primary_key=True)
   name = Column(String, nullable=False)
   path = Column(String, nullable=False)
-  type = Column(Enum(LibraryType))
-
-  photos = relationship("Photo")
+  type = Column(Enum(LibraryType), nullable=False)
 
 
 class Photo(Base):
@@ -35,7 +35,7 @@ class Photo(Base):
   )
 
   id = Column(BigIntegerType, primary_key=True)
-  library_id = Column(Integer, ForeignKey('library.id'), nullable=False)
+  library_id = Column(Integer, ForeignKey(Library.id), nullable=False)
   path = Column(String, nullable=False)
   uuid = Column(String, nullable=False)
   hashes = Column(JSON)
@@ -73,9 +73,9 @@ class Duplicate(Base):
   )
 
   id = Column(BigIntegerType, primary_key=True)
-  library_id = Column(Integer, ForeignKey('library.id'), nullable=False)
-  orig_photo_id = Column(BigInteger, ForeignKey('photo.id'), nullable=False)
-  dup_photo_id = Column(BigInteger, ForeignKey('photo.id'), nullable=False)
+  library_id = Column(Integer, ForeignKey(Library.id), nullable=False)
+  orig_photo_id = Column(BigInteger, ForeignKey(Photo.id), nullable=False)
+  dup_photo_id = Column(BigInteger, ForeignKey(Photo.id), nullable=False)
   hash_name = Column(String, nullable=False)
   hash_value = Column(String, nullable=False)
   score = Column(Integer, nullable=False)

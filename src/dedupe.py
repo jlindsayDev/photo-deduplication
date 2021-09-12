@@ -6,7 +6,7 @@ from sqlalchemy import or_
 import osxphotos
 
 from hasher import Hasher
-from db import Library, Photo, Duplicate, fetch_or_initialize_db
+from db import LibraryType, Library, Photo, Duplicate, fetch_or_initialize_db
 
 
 DATABASE_DEFAULT_PATH = "assets/duplicates.db"
@@ -36,6 +36,10 @@ def parse_args():
     action='store_true',
     help="verbose logging")
 
+  parser.add_argument('--dry-run',
+    action='store_true',
+    help="do not write or encode. list what operations would be performed")
+
   return parser.parse_args()
 
 
@@ -51,18 +55,17 @@ def check_path_existence(arg_name):
 
 def fetch_libraries(paths, db):
   # TODO @j000shDotCom separate directories from apple photos
-  return [fetch_library(path, db) for path in paths], []
+  return [fetch_or_initialize_library(path, db) for path in paths], []
 
 
-def fetch_library(library_path, db):
+def fetch_or_initialize_library(library_path, db):
   library_name = os.path.basename(library_path)
-
   conditions = or_(Library.path == library_path, Library.name == library_name)
   library = db.query(Library).filter(conditions).first()
 
   if not library:
     logging.info(f"Creating Library: ${library_name}")
-    library = Library(name=library_name, path=library_path)
+    library = Library(name=library_name, path=library_path, type=LibraryType.apple_photos)
     db.add(library)
     db.commit()
 
@@ -87,14 +90,19 @@ def is_image_supported(photo):
 
 
 def persist_photos(photos, db):
-  conditions = Photo.uuid.in_([p.uuid for p in photos])
-  db_photos = { p[0] for p in db.query(Photo.uuid).filter(conditions).all() }
+  logging.info(f"INSERTING {len(photos)} NEW PHOTOS")
+  db.add_all(photos)
+  db.commit()
 
-  new_photos = [ p for p in photos if p.uuid not in db_photos ]
-  if new_photos:
-    logging.info(f"INSERTING {len(new_photos)} NEW PHOTOS")
-    db.add_all(new_photos)
-    db.commit()
+  # TODO fix the re-insertion of photos
+  # conditions = Photo.uuid.in_([p.uuid for p in photos])
+  # db_photos = { p[0] for p in db.query(Photo.uuid).filter(conditions).all() }
+
+  # new_photos = [ p for p in photos if p.uuid not in db_photos ]
+  # if new_photos:
+  #   logging.info(f"INSERTING {len(photos)} NEW PHOTOS")
+  #   db.add_all(photos)
+  #   db.commit()
 
 
 def persist_duplicates(library, duplicates, encodings, db):
@@ -169,12 +177,11 @@ def main():
 
   hasher = Hasher()
   logging.info("Encoding images")
-  encodings = hasher.encode_images(photos)
-
-  logging.info("Deduplicating images")
-  duplicates = hasher.find_duplicates(photos)
-
+  #encodings = hasher.encode_images(photos)
   persist_photos(photos, db_session)
+
+  # logging.info("Deduplicating images")
+  # duplicates = hasher.find_duplicates(photos)
   # persist_duplicates(library, duplicates, encodings, db_session)
 
 
