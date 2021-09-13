@@ -1,33 +1,24 @@
 # Photo Library Deduplication
 
-This is a blanket repository for my attempt at deduplicating photos in an iCloud Photos Library.
-
-## Image Fingerprinting
 
 Create an array of distinct photo fingerprints leveraging [imagededup](https://idealo.github.io/imagededup/) hashing algorithms (PHash, AHash, WHash, DHash), EXIF data, and [metadata](https://github.com/RhetTbull/osxmetadata)
-
-### Current Dev Status
-
-This my hobby pet-project I work on occasionally.
-
-Started a live-blog [changelog](CHANGELOG.md) for my own reference whenever making any changes.
 
 ### Setup
 
 ```shell
 poetry install
-poetry run python src/dedupe.py [library_paths]
+poetry run python src/main.py [library_paths]
 ```
 
 Example
 ```
-poetry run python src/dedupe.py library.photoslibrary ~/Pictures /Volumes/ExternalSSD/Photos
+poetry run python src/main.py library.photoslibrary ~/Pictures /Volumes/ExternalSSD/Photos
 ```
 
 ### Usage
 
 ```shell
-usage: dedupe.py [-h] [-d DB_PATH] [-v] path [path ...]
+usage: main.py [-h] [-d DB_PATH] [-v] [--dry-run] [path ...]
 
 Deduplicate photo albums
 
@@ -37,8 +28,9 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -d DB_PATH, --db_path DB_PATH
-                        database file path where results persist
+                        database file path where results persist (defaults to assets/duplicates.db)
   -v, --verbose         verbose logging
+  --dry-run             do not write or encode. list what operations would be performed
 ```
 
 ### Goals
@@ -64,39 +56,3 @@ optional arguments:
 - [JohannesBuchner/imagehash](https://github.com/JohannesBuchner/imagehash)
 - [devedge/imagehash](https://github.com/devedge/imagehash)
 - [david-poirier-csn/pyheif](https://github.com/david-poirier-csn/pyheif)
-
-## Photo Manager
-
-Manage photo edits and duplicates in simple UI
-
-- [x] Simple flask server
-- [ ] WebExtensions browser addon
-  - [ ] Firefox
-  - [ ] Chrome
-  - [ ] React or React Native? (Android app)
-- [ ] [Tauri](https://github.com/tauri-apps/tauri)/Electron "app" (???)
-- [ ] Create photos from Live Photo snapshots
-- [ ] Display graph of Photo edits
-- [ ] Organize photos into albums
-
-## Photo Uploader
-
-Reduce iCloud storage usage by replacing iCloud originals with compressed Google Photos copies. Store originals in Amazon Photos (unlimited storage with Amazon Prime).
-
-- [ ] Download photos in batches (with rate limiting)
-  - [ ] Amazon
-  - [ ] Google
-- [ ] Upload photos in batches (with throttling)
-  - [ ] Amazon
-  - [ ] Google
-- [ ] Test photo data fidelity (upload original to service, download from service, compare to original)
-  - [ ] iCloud
-  - [ ] Google Photos
-  - [ ] Amazon Photos
-- [ ] Upsert to photo albums on remote services
-
-### API Reference Docs
-
-- [Google Photos](https://developers.google.com/photos/library/reference/rest)
-- [Amazon Photos](https://developer.amazon.com/docs/amazon-drive/ad-restful-api-nodes.html)
-  > Important: Amazon Drive has been deprecated! No apps using Amazon Drive can be submitted to the Appstore.
