@@ -6,7 +6,9 @@ from sqlalchemy import or_
 import osxphotos
 
 from hasher import Hasher
-from db import LibraryType, Library, Photo, Duplicate, fetch_or_initialize_db
+from db import \
+  LibraryType, Library, Photo, Duplicate, HashLibrary, HashAlgoritm, Encoding, \
+  get_hash_algo, fetch_or_initialize_db
 
 
 DATABASE_DEFAULT_PATH = "assets/duplicates.db"
@@ -175,14 +177,52 @@ def main():
   applephotos, directories = fetch_libraries(library_paths, db_session)
   photos, videos, albums = fetch_photos(applephotos[0]) # TODO
 
-  hasher = Hasher()
-  logging.info("Encoding images")
-  #encodings = hasher.encode_images(photos)
-  persist_photos(photos, db_session)
+  # TODO replace these dry-run guards with decorators
+  if args.dry_run:
+    logging.info('[dry-run] skipping photo persistence')
+  else:
+    logging.info('Persisting photo data')
+    persist_photos(photos, db_session)
 
-  # logging.info("Deduplicating images")
-  # duplicates = hasher.find_duplicates(photos)
-  # persist_duplicates(library, duplicates, encodings, db_session)
+  hasher = Hasher()
+
+  if args.dry_run:
+    logging.info('[dry-run] skipping image encoding')
+  else:
+    logging.info("Encoding images with imagededup")
+    imagededup_encodings = hasher.imagededup_encode(photos)
+
+    logging.info("Encoding images with imagehash")
+    imagehash_encodings = hasher.imagehash_encode(photos)
+
+    logging.info('Persisting photo encodings')
+    encodings = []
+
+    for photo in photos:
+      photo_id = photo.id
+
+      for hash_name, value in imagededup_encodings[photo_id].items():
+        enc = Encoding(photo_id=photo_id, hash_library=HashLibrary.imagededup, \
+          algorithm=get_hash_algo(hash_name), value=value)
+        encodings.append(enc)
+
+      for hash_name, value in imagehash_encodings[photo_id].items():
+        enc = Encoding(photo_id=photo_id, hash_library=HashLibrary.imagehash, \
+          algorithm=get_hash_algo(hash_name), value=value)
+        encodings.append(enc)
+
+    db_session.add_all(encodings)
+    db_session.commit()
+
+
+  if args.dry_run:
+    logging.info('[dry-run] skipping deduplication check and persistence')
+  else:
+    pass
+    # TODO make this smarter AND ASYNC
+    # logging.info("Deduplicating images")
+    # duplicates = hasher.find_duplicates(photos)
+    # persist_duplicates(library, duplicates, encodings, db_session)
 
 
 if __name__ == "__main__":
