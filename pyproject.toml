@@ -11,9 +11,12 @@ imagededup = {git = "https://github.com/j000shDotCom/imagededup.git", rev = "jos
 osxphotos = "^0.42.80"
 pyheif = "^0.5.1"
 SQLAlchemy = "^1.4.23"
+videohash = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+Flask = "^2.0.2"
+Flask-SQLAlchemy = "^2.5.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
